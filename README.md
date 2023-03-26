@@ -1,4 +1,4 @@
-# Capture The Ether Solutions in Brownie
+# ⛳️ Capture The Ether Solutions in Brownie ⛳️
 
 > Saikat Karmakar | 25 Mar : 2023
 
@@ -7,7 +7,7 @@
 
 ![](media/capturtetE.png)
 
-## Warmup
+## Warmup 🏃
 - [CallMe](warmup/CallMe_DONE)
 ![](media/callme.gif)
 
