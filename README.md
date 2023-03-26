@@ -9,4 +9,7 @@
 
 ## Warmup
 - [CallMe](warmup/CallMe_DONE)
+![](media/callme.gif)
+
 - [Nickname](warmup/Nickname_DONE)
+![](media/nickname.gif)
