@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from brownie import DeployChallenge
 from scripts.deploy import deploy
 from scripts.helpful_scripts import get_account
 from colorama import Fore
@@ -20,13 +21,8 @@ def print_colour(target, solved=False):
 
 def hack(contract_address=None, attacker=None):
     target, _ = deploy()
-    _, attacker = get_account()
 
-    print_colour(target, target.isComplete())
-
-    tx = target.callme({"from": attacker})
-    tx.wait(1)
-
+    # print(target.address)
     print_colour(target, target.isComplete())
 
     assert target.isComplete() == True

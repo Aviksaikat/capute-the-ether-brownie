@@ -8,7 +8,7 @@ def deploy():
     c = CaptureTheEther.deploy({"from": owner})
     n = NicknameChallenge.deploy(c.address, {"from": owner})
 
-    return c, n, owner
+    return c, n
 
 
 def main():

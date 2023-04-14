@@ -1,3 +1,4 @@
 *.tape
 .env
 build/*
+make_media.py

@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-from brownie import CaptureTheEther, NicknameChallenge, web3
-from brownie.convert import to_bytes
 from scripts.deploy import deploy
 from scripts.helpful_scripts import get_account
 from colorama import Fore
@@ -13,53 +11,31 @@ magenta = Fore.MAGENTA
 reset = Fore.RESET
 
 
-def print_colour(solved):
+def print_colour(solved=0):
     if solved:
-        print(f"{blue}Is complete: {green}{True}{reset}")
+        print(f"{blue}Is complete: {green}{solved}{reset}")
     else:
         print(f"{blue}Is complete: {red}{solved}{reset}")
 
 
 def hack(contract_address=None, attacker=None):
-    if not contract_address:
-        capute_the_eth, nick_name, _ = deploy()
-        _, attacker = get_account()
-    else:
-        print(f"{red}Something is wrong{reset}")
-        exit(-1)
+    target, nickname = deploy()
+    _, attacker = get_account()
 
-    # print(capute_the_eth.address, nick_name.address)
-    # exit()
-    print_colour(capute_the_eth.nicknameOf(attacker)[0])
+    print_colour(target.nicknameOf(attacker)[0])
 
-    nickname = to_bytes("jadu".encode().hex(), "bytes")
-    """
-    for bytes32 the ans is gven by brownie is 
-    b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00jadu'
+    nick_name = "kalamity".encode()
+    nick_name = nick_name + b"\x00" * (32 - len(nick_name))
 
-    but the solidity compiler doesn't read the value like this(maybe)
+    target.setNickname(nick_name, {"from": attacker}).wait(1)
 
-    so that's why the next step is to convery the above into
-    b'jadu\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-     
-    """
-    bytes_value = bytes(nickname) + b"\x00" * (32 - len(nickname))
+    print_colour(target.nicknameOf(attacker)[0])
 
-    # print(bytes_value)
-
-    tx = capute_the_eth.setNickname(bytes_value, {"from": attacker})
-    tx.wait(1)
-
-    print_colour(capute_the_eth.nicknameOf(attacker)[0])
-
-    assert capute_the_eth.nicknameOf(attacker)[0] != 0
+    assert target.nicknameOf(attacker)[0] != 0
 
 
-def main(contract_address=None):
-    if contract_address:
-        hack(contract_address, get_account())
-    else:
-        hack()
+def main():
+    hack()
 
 
 if __name__ == "__main__":
