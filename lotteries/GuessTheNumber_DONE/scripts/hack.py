@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 from brownie import GuessTheNumberChallenge, web3
+from colorama import Fore
 from scripts.deploy import deploy
 from scripts.helpful_scripts import get_account
-from colorama import Fore
 
 # * colours
 green = Fore.GREEN
@@ -29,7 +29,7 @@ def hack(contract_address=None, attacker=None):
 
     print_colour(target.isComplete())
 
-    target.guess(42, {"from": attacker, "value": "1 ether"}).wait(1)w
+    target.guess(42, {"from": attacker, "value": "1 ether"}).wait(1)
 
     print_colour(target.isComplete())
 
